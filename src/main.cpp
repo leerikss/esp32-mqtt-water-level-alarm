@@ -40,7 +40,7 @@ double read_battery_level() {
     delay(10);
   }
   // lipo.quickStart(); // Should we run this?
-	return lipo.getSOC();
+  return lipo.getSOC();
 }
 
 void connect_to_mqtt() {

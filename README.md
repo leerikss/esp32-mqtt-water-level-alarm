@@ -55,22 +55,29 @@ mqtt:
 
 ### Automation configuration example
 ~~~code
-id: '1686305255130'
-alias: Turn Off AC when watertank full
-description: ''
+alias: Turn Off AC when watertank is full
+description: ""
 trigger:
   - platform: mqtt
     topic: /home/balcony/watertank/sensor
 condition:
   - condition: state
     entity_id: binary_sensor.water_tank_sensor_alarm
-    state: 'on'
+    state: "on"
 action:
-  - device_id: 0b4465ab94e18bb160c19ce772ebd205
-    domain: climate
-    entity_id: climate.ac
-    type: set_hvac_mode
-    hvac_mode: 'off'
+  - repeat:
+      while:
+        - condition: state
+          entity_id: binary_sensor.water_tank_sensor_alarm
+          state: "on"
+      sequence:
+        - device_id: 0b4465ab94e18bb160c19ce772ebd205
+          domain: climate
+          entity_id: climate.ac
+          type: set_hvac_mode
+          hvac_mode: "off"
+        - delay:
+            minutes: 1
 mode: single
 ~~~
 
