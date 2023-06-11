@@ -1,9 +1,9 @@
 # esp32-mqtt-water-level-alarm
 
 I have a water tank on my balcony collecting condensation water from the AC.
-In case I forget to empty the tank, I made a little system that shuts down the AC, if the tank gets too full.
+To prevent possible water overflow, I made a little system that shuts down the AC if the tank gets too full.
 The system consists of
-1) an esp32 board (with a liquid level sensor) running on a LiPo battery, sending MQTT messages to
+1) an esp32 board with a liquid level sensor running on a LiPo battery, sending MQTT messages to
 2) a HomeAssistant server (RPI), which in turn shuts down the AC upon critical water level
 
 TODO: More, work in progress.
@@ -20,8 +20,8 @@ Crowtail- Non-contact liquid level sensor 2.0 (https://www.elecrow.com/crowtail-
 A Li-Po battery 3,7V 800mAh 
 
 ## C++ notes
-- To compile, add and edit the "src/secrets.h" file with your wifi/mqtt secrets. 
-There's a "secrests.h.example" file with required definitions.
+To compile, add and edit the "src/secrets.h" file with your wifi/mqtt secrets. 
+There's a "secrets.h.example" file with required definitions.
 
 ## Home assistant integration
 This is how I've configured HomeAssistant
@@ -40,7 +40,6 @@ mqtt:
       json_attributes_template: "{{ value_json.battery | tojson }}"
       unit_of_measurement: "%"
       device_class: "battery"
-      qos: 2
   binary_sensor:
     - name: "Water Tank Sensor Alarm"
       unique_id: "water-tank-sensor-alarm"
@@ -51,7 +50,6 @@ mqtt:
       payload_on: true
       payload_off: false
       device_class: "problem"
-      qos: 2
 ...
 ~~~
 
