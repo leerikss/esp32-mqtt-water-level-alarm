@@ -54,16 +54,16 @@ mqtt:
 ~~~
 
 ### Automation configuration example
+
 ~~~code
 alias: Turn Off AC when watertank is full
 description: ""
 trigger:
-  - platform: mqtt
-    topic: /home/balcony/watertank/sensor
-condition:
-  - condition: state
-    entity_id: binary_sensor.water_tank_sensor_alarm
-    state: "on"
+  - platform: state
+    entity_id:
+      - binary_sensor.water_tank_sensor_alarm
+    to: "on"
+condition: []
 action:
   - repeat:
       while:
