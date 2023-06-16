@@ -190,14 +190,15 @@ module pins_holes() {
 
     // Right pins
     x1 = (x/2) - wall_thickness - bar1_off - bar_w - pins_r_x - (pins_w / 2);
-    y1 = (y/2) - wall_thickness - pins_off - (pins_r_h / 2);
+    // y1 = (y/2) - wall_thickness - pins_off - (pins_r_h / 2);
+    y1 = (pins_r_h/2) - (y/2) + wall_thickness + pins_off;
     translate([x1,y1,-1]) linear_extrude(z) {
         square([pins_w, pins_r_h], center=true);
     }
     
     // Left pins
     x2 = x1 - 19;
-    y2 = y1 + (pins_r_h - pins_l_h)/2;
+    y2 = y1 - (pins_r_h - pins_l_h)/2;
     translate([x2,y2,-1]) linear_extrude(z) {
         square([pins_w, pins_l_h], center=true);
     }
