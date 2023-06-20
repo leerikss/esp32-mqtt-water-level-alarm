@@ -14,7 +14,8 @@
 #define WATER_SENSOR_IN_PIN   A5
 
 // Sleep time in seconds after message has been delivered
-#define SLEEP_IN_SECONDS      360
+#define SLEEP_IN_SECONDS      300
+#define BATTERY_CHANGE_RATE   10
 
 // Create a secrets.h file with these values defined (look at the secrets.h.example file)
 char      wifi_ssid[] = WIFI_SSID;
@@ -32,8 +33,8 @@ Ticker wifi_reconnect_timer;
 Ticker mqtt_reconnect_timer;
 char json_buffer[64];
 
-RTC_DATA_ATTR unsigned int prev_battery_percent = 0;
-RTC_DATA_ATTR boolean prev_liquid_detected = false;
+RTC_DATA_ATTR signed int prev_battery_percent = -1;
+RTC_DATA_ATTR signed int prev_liquid_detected = -1;
 
 int read_battery_percent(int nearest_n) {
   while(!Wire.available() && !Wire.begin()) {
@@ -42,7 +43,7 @@ int read_battery_percent(int nearest_n) {
   while (!lipo.begin()) {
     delay(10);
   }
-  // lipo.quickStart(); // Should we run this?
+  lipo.quickStart(); // Should we run this?
   int percent = static_cast<int>(lipo.getSOC());
   return (percent / nearest_n) * nearest_n;
 }
@@ -129,10 +130,10 @@ void setup () {
   boolean liquid_detected = (digitalRead(WATER_SENSOR_IN_PIN) == 0);
   digitalWrite(WATER_SENSOR_OUT_PIN, LOW);
 
-  int battery_percent = read_battery_percent(5);
+  int battery_percent = read_battery_percent(BATTERY_CHANGE_RATE);
 
   // Preserve battery by not doing networking if values are unchanged
-  if(battery_percent == prev_battery_percent && liquid_detected == prev_liquid_detected) {
+  if(liquid_detected == prev_liquid_detected && battery_percent == prev_battery_percent) {
     go_to_sleep();
   }
   prev_liquid_detected = liquid_detected;
