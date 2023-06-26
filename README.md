@@ -5,10 +5,10 @@
 ![Alt text](img/img3.jpg?raw=true "Title")
 
 I have a water tank on my balcony collecting condensation water from the AC.
-To prevent possible water overflow, I made a little system that shuts down the AC if the tank gets too full.
+To prevent potential water overflow, I made a little system that shuts down the AC if the tank gets too full.
 The system consists of
-1) an esp32 board with a liquid level sensor running on a LiPo battery, sending MQTT messages to
-2) a HomeAssistant server (RPI), which in turn shuts down the AC upon critical water level
+1) an esp32 board with a liquid level sensor powered by a LiPo battery, sending MQTT messages to a
+2) <a href="https://www.home-assistant.io/">HomeAssistant OS</a> running on a <a href="https://www.raspberrypi.org/">Raspberry PI</a>, which in turn shuts down the AC upon critical water level
 
 ## Hardware
 
@@ -83,3 +83,5 @@ action:
 mode: single
 ~~~
 
+## 3D enclosure
+The 3D enclosure STL and OpenSCAD files can be found in the "3d-enclosure" folder. The enclosure is a modified version of the excellent <a href="https://www.thingiverse.com/thing:2866563">Customizable snap-fit electronics project box enclosure</a>.
