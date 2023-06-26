@@ -1,14 +1,16 @@
 # esp32-mqtt-water-level-alarm
 
+![Alt text](img/img1.jpg?raw=true "Title")
+![Alt text](img/img2.jpg?raw=true "Title")
+![Alt text](img/img3.jpg?raw=true "Title")
+
 I have a water tank on my balcony collecting condensation water from the AC.
 To prevent possible water overflow, I made a little system that shuts down the AC if the tank gets too full.
 The system consists of
 1) an esp32 board with a liquid level sensor running on a LiPo battery, sending MQTT messages to
 2) a HomeAssistant server (RPI), which in turn shuts down the AC upon critical water level
 
-TODO: More, work in progress.
-
-## Hardare
+## Hardware
 
 ### ESP32 board
 Adafruit ESP32-S3 Feather (https://learn.adafruit.com/adafruit-esp32-s3-feather/overview)
