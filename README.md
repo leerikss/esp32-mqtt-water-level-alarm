@@ -1,8 +1,9 @@
 # esp32-mqtt-water-level-alarm
 
-![Alt text](img/img1.jpg?raw=true "Title")
-![Alt text](img/img2.jpg?raw=true "Title")
-![Alt text](img/img3.jpg?raw=true "Title")
+![Alt text](img/img1.jpg?raw=true "The Li-Po battery and the ESP32-S3 inside the 3D-printed enclosure")
+![Alt text](img/img2.jpg?raw=true "Charging the Li-Po battery via the USB-C slot")
+![Alt text](img/img3.jpg?raw=true "Device attached to the water tank (and yes, it should be placed on a safer spot in case of water spilling over:)")
+![Alt text](img/img4.jpg?raw=true "Home Assistant showing device status")
 
 I have a water tank on my balcony collecting condensation water from the AC.
 To prevent potential water overflow, I made a little system that shuts down the AC if the tank gets too full.
