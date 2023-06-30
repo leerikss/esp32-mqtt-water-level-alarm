@@ -82,4 +82,4 @@ mode: single
 ~~~
 
 ## 3D enclosure
-The 3D enclosure STL and OpenSCAD files can be found in the "3d-enclosure" folder. The enclosure is a modified version of the excellent <a href="https://www.thingiverse.com/thing:2866563">Customizable snap-fit electronics project box enclosure</a>.
+The 3D enclosure STL and OpenSCAD files can be found in the "3d-enclosure" folder. The enclosure is a modified version of the <a href="https://www.thingiverse.com/thing:2411898">box with snap on cover - parametrised OpenSCAD</a>.
