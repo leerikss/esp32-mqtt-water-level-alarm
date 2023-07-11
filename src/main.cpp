@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <cmath>
 
 #include <WiFi.h>
 #include <Ticker.h>
@@ -13,19 +14,18 @@
 #define WATER_SENSOR_OUT_PIN  A0
 #define WATER_SENSOR_IN_PIN   A5
 
-// Sleep time in seconds after message has been delivered
-#define SLEEP_IN_SECONDS      300
-#define BATTERY_CHANGE_RATE   10
+#define SLEEP_IN_SECONDS      300 // 5 min sleep time in seconds after message has been delivered
+#define BATTERY_CHANGE_RATE   5   // 100%, 95%, 90%, ...
 
 // Create a secrets.h file with these values defined (look at the secrets.h.example file)
-char      wifi_ssid[] = WIFI_SSID;
-char      wifi_password[] = WIFI_PASSWORD;
-char      mqtt_broker_ip[] = MQTT_BROKER_IP;
-uint16_t  mqtt_broker_port = MQTT_BROKER_PORT;
-char      mqtt_broker_username[] = MQTT_BROKER_USERNAME;
-char      mqtt_broker_password[] = MQTT_BROKER_PASSWORD;
-char      mqtt_topic[] = MQTT_TOPIC;
-char      mqtt_client_id[] = MQTT_CLIENT_ID;
+char      wifi_ssid[] =             WIFI_SSID;
+char      wifi_password[] =         WIFI_PASSWORD;
+char      mqtt_broker_ip[] =        MQTT_BROKER_IP;
+uint16_t  mqtt_broker_port =        MQTT_BROKER_PORT;
+char      mqtt_broker_username[] =  MQTT_BROKER_USERNAME;
+char      mqtt_broker_password[] =  MQTT_BROKER_PASSWORD;
+char      mqtt_topic[] =            MQTT_TOPIC;
+char      mqtt_client_id[] =        MQTT_CLIENT_ID;
 
 SFE_MAX1704X lipo(MAX1704X_MAX17048); 
 AsyncMqttClient mqtt_client;
@@ -33,8 +33,9 @@ Ticker wifi_reconnect_timer;
 Ticker mqtt_reconnect_timer;
 char json_buffer[64];
 
-RTC_DATA_ATTR signed int prev_battery_percent = -1;
-RTC_DATA_ATTR signed int prev_liquid_detected = -1;
+RTC_DATA_ATTR signed int  prev_liquid_detected = -1;
+RTC_DATA_ATTR signed int  prev_battery_percent1 = -1;
+RTC_DATA_ATTR signed int  prev_battery_percent2 = -1;
 
 int read_battery_percent(int nearest_n) {
   while(!Wire.available() && !Wire.begin()) {
@@ -43,9 +44,8 @@ int read_battery_percent(int nearest_n) {
   while (!lipo.begin()) {
     delay(10);
   }
-  lipo.quickStart(); // Should we run this?
-  int percent = static_cast<int>(lipo.getSOC());
-  return (percent / nearest_n) * nearest_n;
+  lipo.quickStart(); // Should we run this every time?
+  return static_cast<int>(round(lipo.getSOC() / nearest_n) * nearest_n);
 }
 
 void go_to_sleep() {
@@ -133,11 +133,17 @@ void setup () {
   int battery_percent = read_battery_percent(BATTERY_CHANGE_RATE);
 
   // Preserve battery by not doing networking if values are unchanged
-  if(liquid_detected == prev_liquid_detected && battery_percent == prev_battery_percent) {
+  if(liquid_detected == prev_liquid_detected && 
+    (battery_percent == prev_battery_percent1 || 
+    battery_percent == prev_battery_percent2)) {
     go_to_sleep();
   }
+
+  // Persist values - we persist and check against two last battery values, as the battery value
+  // fluctuates between two values when close to limit values, no need to waste battery by reporting that
   prev_liquid_detected = liquid_detected;
-  prev_battery_percent = battery_percent;
+  prev_battery_percent2 = (prev_battery_percent1 == -1) ? battery_percent : prev_battery_percent1;
+  prev_battery_percent1 = battery_percent;
 
   publish_message(liquid_detected, battery_percent);
 }
