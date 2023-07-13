@@ -1,6 +1,6 @@
 # esp32-mqtt-water-level-alarm
 
-![Alt text](preview.jpg?raw=true "Device in actin with a 3D printed enclosure")
+![Alt text](preview.png?raw=true "Device in actin with a 3D printed enclosure")
 
 I have a water tank on my balcony collecting condensation water from the AC.
 To prevent potential water overflow, I made a little system that shuts down the AC if the tank gets too full.
